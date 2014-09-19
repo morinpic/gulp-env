@@ -8,9 +8,11 @@ var path = {
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
+var plumber = require('gulp-plumber');
 
 gulp.task('sass', function(){
   gulp.src(path.src + '/scss/**/*.scss')
+    .pipe(plumber())
     .pipe(sass())
     .pipe(minify())
     .pipe(gulp.dest(path.tmp + '/css/'));
