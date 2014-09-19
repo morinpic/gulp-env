@@ -8,6 +8,7 @@
     "gulp-sass": "^0.7.3"
   },
   "devDependencies": {
+    "gulp-minify-css": "^0.3.10",
     "gulp-sass": "^0.7.3"
   },
   "scripts": {
