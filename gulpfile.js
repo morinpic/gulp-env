@@ -9,7 +9,8 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
-var browser = require("browser-sync");
+var browser = require('browser-sync');
+var runSequence = require('run-sequence');
 
 // sass
 gulp.task('sass', function(){
