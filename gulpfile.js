@@ -2,7 +2,7 @@
 var path = {
   src : 'assets',
   tmp : '.tmp',
-  dist : 'build'
+  build : 'build'
 };
 
 var gulp = require('gulp');
@@ -10,6 +10,27 @@ var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
 var browser = require("browser-sync");
+
+// sass
+gulp.task('sass', function(){
+  gulp.src(path.src + '/scss/**/*.scss')
+    .pipe(plumber())
+    .pipe(sass())
+    .pipe(gulp.dest(path.tmp + '/css/'))
+    .pipe(browser.reload({stream:true}));
+});
+
+// cssmin
+gulp.task('cssmin', ['sass'], function() {
+  gulp.src(path.tmp + '/css/**/*.css')
+    .pipe(minify())
+    .pipe(gulp.dest(path.build + '/css/'));
+});
+
+// watch
+gulp.task('watch', function(){
+  gulp.watch([path.src +'/scss/**/*.scss'], ['sass']);
+});
 
 // server
 gulp.task("server", function() {
@@ -20,21 +41,14 @@ gulp.task("server", function() {
     });
 });
 
-// sass
-gulp.task('sass', function(){
-  gulp.src(path.src + '/scss/**/*.scss')
-    .pipe(plumber())
-    .pipe(sass())
-    .pipe(minify())
-    .pipe(gulp.dest(path.tmp + '/css/'))
-    .pipe(browser.reload({stream:true}));
-});
+// default
+gulp.task('default', [
+  'server',
+  'sass',
+  'watch'
+]);
 
-// watch
-gulp.task('watch', function(){
-  gulp.watch([path.src +'/scss/**/*.scss'], ['sass']);
-});
-
-gulp.task('default', ['server'], function() {
-  gulp.watch([path.src +'/scss/**/*.scss'], ['sass']);
-});
+// build
+gulp.task('build', [
+  'cssmin'
+]);
