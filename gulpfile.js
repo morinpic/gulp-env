@@ -6,11 +6,40 @@ var path = {
 };
 
 var gulp = require('gulp');
+var concat = require('gulp-concat');
+var del = require('del');
 var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
+
+// js
+gulp.task('js', function(){
+  runSequence(
+    'js-concat',
+    'js-copy',
+    'js-clean'
+  );
+});
+
+// js-concat
+gulp.task('js-concat', function(){
+  return gulp.src(path.src + '/js/common/*js')
+    .pipe(concat('common.js'))
+    .pipe(gulp.dest(path.tmp + '/js/'));
+});
+
+// js-copy
+gulp.task('js-copy', function() {
+  return gulp.src(path.src + '/js/**')
+    .pipe(gulp.dest(path.tmp + '/js/'));
+});
+
+// js-clean
+gulp.task('js-clean', function(cb) {
+  del(path.tmp + '/js/common', cb);
+});
 
 // sass
 gulp.task('sass', function(){
@@ -35,17 +64,18 @@ gulp.task('watch', function(){
 
 // server
 gulp.task("server", function() {
-    browser({
-        server: {
-            baseDir: path.tmp
-        }
-    });
+  browser({
+    server: {
+      baseDir: path.tmp
+    }
+  });
 });
 
 // default
 gulp.task('default', [
   'server',
   'sass',
+  'js',
   'watch'
 ]);
 
