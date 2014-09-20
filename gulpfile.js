@@ -15,12 +15,15 @@ var browser = require('browser-sync');
 var runSequence = require('run-sequence');
 
 // js
-gulp.task('js', function(){
-  runSequence(
-    'js-concat',
-    'js-copy',
-    'js-clean'
-  );
+gulp.task('js', ['js-prepare'], function(){
+  gulp.src(path.tmp + '/js/**/*.js')
+    .pipe(plumber())
+    .pipe(browser.reload({stream:true}));
+});
+
+// js-prepare
+gulp.task('js-prepare', function() {
+  runSequence('js-concat', 'js-copy', 'js-del');
 });
 
 // js-concat
@@ -36,8 +39,8 @@ gulp.task('js-copy', function() {
     .pipe(gulp.dest(path.tmp + '/js/'));
 });
 
-// js-clean
-gulp.task('js-clean', function(cb) {
+// js-del
+gulp.task('js-del', function(cb) {
   del(path.tmp + '/js/common', cb);
 });
 
@@ -50,8 +53,8 @@ gulp.task('sass', function(){
     .pipe(browser.reload({stream:true}));
 });
 
-// cssmin
-gulp.task('cssmin', ['sass'], function() {
+// build-css
+gulp.task('build-css', ['sass'], function() {
   gulp.src(path.tmp + '/css/**/*.css')
     .pipe(minify())
     .pipe(gulp.dest(path.build + '/css/'));
@@ -60,6 +63,7 @@ gulp.task('cssmin', ['sass'], function() {
 // watch
 gulp.task('watch', function(){
   gulp.watch([path.src +'/scss/**/*.scss'], ['sass']);
+  gulp.watch([path.src +'/js/**/*.js'], ['js']);
 });
 
 // server
@@ -81,5 +85,5 @@ gulp.task('default', [
 
 // build
 gulp.task('build', [
-  'cssmin'
+  'build-css'
 ]);
