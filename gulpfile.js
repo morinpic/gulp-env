@@ -8,6 +8,7 @@ var path = {
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var del = require('del');
+var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
@@ -16,7 +17,7 @@ var runSequence = require('run-sequence');
 
 // js
 gulp.task('js', ['js-prepare'], function(){
-  gulp.src(path.tmp + '/js/**/*.js')
+  return gulp.src(path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/***/*.js')
     .pipe(plumber())
     .pipe(browser.reload({stream:true}));
 });
@@ -42,6 +43,13 @@ gulp.task('js-copy', function() {
 // js-del
 gulp.task('js-del', function(cb) {
   del(path.tmp + '/js/common', cb);
+});
+
+// build-js
+gulp.task('build-js', ['js'], function() {
+  return gulp.src([path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/**/*.js'])
+    .pipe(uglify())
+    .pipe(gulp.dest(path.build + '/js/'));
 });
 
 // sass
@@ -85,5 +93,6 @@ gulp.task('default', [
 
 // build
 gulp.task('build', [
+  'build-js',
   'build-css'
 ]);
