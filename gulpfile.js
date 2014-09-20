@@ -45,13 +45,6 @@ gulp.task('js-del', function(cb) {
   del(path.tmp + '/js/common', cb);
 });
 
-// build-js
-gulp.task('build-js', ['js'], function() {
-  return gulp.src([path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/**/*.js'])
-    .pipe(uglify())
-    .pipe(gulp.dest(path.build + '/js/'));
-});
-
 // sass
 gulp.task('sass', function(){
   gulp.src(path.src + '/scss/**/*.scss')
@@ -59,6 +52,19 @@ gulp.task('sass', function(){
     .pipe(sass())
     .pipe(gulp.dest(path.tmp + '/css/'))
     .pipe(browser.reload({stream:true}));
+});
+
+// build-clean
+//TODO:build時のフォルダ削除は各要素(html,js,css,img)毎に定義してあげた方がよい？
+gulp.task('build-clean', function(cb) {
+  del(path.build, cb);
+});
+
+// build-js
+gulp.task('build-js', ['js'], function() {
+  return gulp.src([path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/**/*.js'])
+    .pipe(uglify())
+    .pipe(gulp.dest(path.build + '/js/'));
 });
 
 // build-css
@@ -92,7 +98,12 @@ gulp.task('default', [
 ]);
 
 // build
-gulp.task('build', [
-  'build-js',
-  'build-css'
-]);
+gulp.task('build', function() {
+  runSequence(
+    'build-clean',
+    [
+      'build-js',
+      'build-css'
+    ]
+  );
+});
