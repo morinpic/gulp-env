@@ -12,9 +12,11 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
+var autoprefixer = require('gulp-autoprefixer');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
 var clean = require('gulp-clean');
+var gulp = require('gulp');
 
 // html
 gulp.task('html', function() {
@@ -58,13 +60,24 @@ gulp.task('sass', function(){
   gulp.src(path.src + '/scss/**/*.scss')
     .pipe(plumber())
     .pipe(sass())
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: true
+    }))
     .pipe(gulp.dest(path.tmp + '/css/'))
     .pipe(browser.reload({stream:true}));
 });
 
+// css-autoprefixer
+gulp.task('css-autoprefixer', function () {
+    return gulp.src(path.tmp + '/css/common.css')
+
+        .pipe(gulp.dest(path.tmp + '/css/common.css'));
+});
+
 // clean
 gulp.task('clean', function() {
-  gulp.src(path.tmp)
+  return gulp.src(path.tmp)
     .pipe(clean());
 });
 

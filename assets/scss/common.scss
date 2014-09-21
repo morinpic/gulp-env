@@ -1,10 +1,16 @@
 @charset "UTF-8";
+// =======================
+// base
+// =======================
+@import 'base/reset';
+@import 'base/base';
 
-@import 'base/**';
+// =======================
+// layout
+// =======================
 @import 'layout/layout';
+
+// =======================
+// module
+// =======================
 @import 'module/module';
-
-
-h1 {
-  color: red;
-}
