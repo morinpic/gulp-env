@@ -15,6 +15,12 @@ var plumber = require('gulp-plumber');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
 
+// html
+gulp.task('html', function() {
+  gulp.src(path.src + '/**/*.html')
+    .pipe(gulp.dest(path.tmp));
+});
+
 // js
 gulp.task('js', ['js-prepare'], function(){
   return gulp.src(path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/***/*.js')
@@ -75,9 +81,10 @@ gulp.task('build-css', ['sass'], function() {
 });
 
 // watch
-gulp.task('watch', function(){
-  gulp.watch([path.src +'/scss/**/*.scss'], ['sass']);
+gulp.task('watch', ['server'], function(){
+  gulp.watch([path.src +'/**/*.html'], ['html']);
   gulp.watch([path.src +'/js/**/*.js'], ['js']);
+  gulp.watch([path.src +'/scss/**/*.scss'], ['sass']);
 });
 
 // server
@@ -90,20 +97,17 @@ gulp.task("server", function() {
 });
 
 // default
-gulp.task('default', [
-  'server',
-  'sass',
-  'js',
-  'watch'
-]);
+gulp.task('default', function() {
+  runSequence(
+    ['html', 'js', 'sass'],
+    'watch'
+  );
+});
 
 // build
 gulp.task('build', function() {
   runSequence(
     'build-clean',
-    [
-      'build-js',
-      'build-css'
-    ]
+    ['build-js', 'build-css']
   );
 });
