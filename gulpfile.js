@@ -14,11 +14,13 @@ var minify = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
+var clean = require('gulp-clean');
 
 // html
 gulp.task('html', function() {
   gulp.src(path.src + '/**/*.html')
-    .pipe(gulp.dest(path.tmp));
+    .pipe(gulp.dest(path.tmp))
+    .pipe(browser.reload({stream:true}));
 });
 
 // js
@@ -60,10 +62,16 @@ gulp.task('sass', function(){
     .pipe(browser.reload({stream:true}));
 });
 
+// clean
+gulp.task('clean', function() {
+  gulp.src(path.tmp)
+    .pipe(clean());
+});
+
 // build-clean
-//TODO:build時のフォルダ削除は各要素(html,js,css,img)毎に定義してあげた方がよい？
-gulp.task('build-clean', function(cb) {
-  del(path.build, cb);
+gulp.task('build-clean', function() {
+  gulp.src(path.build)
+    .pipe(clean());
 });
 
 // build-js
@@ -97,7 +105,7 @@ gulp.task("server", function() {
 });
 
 // default
-gulp.task('default', function() {
+gulp.task('default', ['clean'], function() {
   runSequence(
     ['html', 'js', 'sass'],
     'watch'
@@ -105,9 +113,8 @@ gulp.task('default', function() {
 });
 
 // build
-gulp.task('build', function() {
+gulp.task('build', ['build-clean'], function() {
   runSequence(
-    'build-clean',
     ['build-js', 'build-css']
   );
 });
