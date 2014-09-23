@@ -16,7 +16,6 @@ var autoprefixer = require('gulp-autoprefixer');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
 var clean = require('gulp-clean');
-var gulp = require('gulp');
 var imagemin = require('gulp-imagemin');
 
 // html
