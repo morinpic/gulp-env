@@ -12,6 +12,7 @@ var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var minify = require('gulp-minify-css');
 var plumber = require('gulp-plumber');
+var autoprefixer = require('gulp-autoprefixer');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
 var clean = require('gulp-clean');
@@ -59,6 +60,10 @@ gulp.task('sass', function(){
   gulp.src(path.src + '/scss/**/*.scss')
     .pipe(plumber())
     .pipe(sass())
+    .pipe(autoprefixer({
+      browsers: ['last 2 versions'],
+      cascade: true
+    }))
     .pipe(gulp.dest(path.tmp + '/css/'))
     .pipe(browser.reload({stream:true}));
 });
