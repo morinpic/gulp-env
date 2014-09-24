@@ -11,6 +11,11 @@ var del = require('del');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
 
+// clean
+gulp.task('clean', function (cb) {
+  del(path.tmp, cb);
+});
+
 // html
 gulp.task('html', function() {
   gulp.src(path.src + '/**/*.html')
@@ -67,16 +72,9 @@ gulp.task('img', function() {
     .pipe(gulp.dest(path.tmp + '/img/'));
 });
 
-// clean
-gulp.task('clean', function() {
-  return gulp.src(path.tmp)
-    .pipe($.clean());
-});
-
 // build-clean
-gulp.task('build-clean', function() {
-  return gulp.src(path.build)
-    .pipe($.clean());
+gulp.task('build-clean', function (cb) {
+  del(path.build, cb);
 });
 
 // build-js
