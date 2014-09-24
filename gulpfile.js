@@ -82,21 +82,24 @@ gulp.task('build-clean', function (cb) {
 gulp.task('build-js', ['js'], function() {
   return gulp.src([paths.tmp + '/js/**/*.js', !paths.tmp + '/js/lib/**/*.js'])
     .pipe($.uglify())
-    .pipe(gulp.dest(paths.build + '/js/'));
+    .pipe(gulp.dest(paths.build + '/js/'))
+    .pipe($.size({title: 'javascripts'}));
 });
 
 // build-css
 gulp.task('build-css', ['sass'], function() {
   gulp.src(paths.tmp + '/css/**/*.css')
     .pipe($.minifyCss())
-    .pipe(gulp.dest(paths.build + '/css/'));
+    .pipe(gulp.dest(paths.build + '/css/'))
+    .pipe($.size({title: 'styles'}));
 });
 
 // build-img
 gulp.task('build-img', ['img'], function() {
   gulp.src(paths.tmp + '/img/**')
     .pipe($.imagemin())
-    .pipe(gulp.dest(paths.build + '/img/'));
+    .pipe(gulp.dest(paths.build + '/img/'))
+    .pipe($.size({title: 'images'}));
 });
 
 // watch
