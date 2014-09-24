@@ -16,6 +16,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
 var clean = require('gulp-clean');
+var spritesmith = require('gulp.spritesmith');
 var imagemin = require('gulp-imagemin');
 
 // html
@@ -27,8 +28,10 @@ gulp.task('html', function() {
 
 // js
 gulp.task('js', ['js-prepare'], function(){
-  return gulp.src(path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/***/*.js')
-    .pipe(plumber())
+  return gulp.src([
+    path.tmp + '/js/**/*.js',
+    '!' + path.tmp + '/js/lib/***/*.js'
+    ]).pipe(plumber())
     .pipe(browser.reload({stream:true}));
 });
 
@@ -69,9 +72,23 @@ gulp.task('sass', function(){
 });
 
 // img
-gulp.task('img', function() {
-  gulp.src(path.src + '/img/**')
+gulp.task('img', ['sprite'], function() {
+  gulp.src([
+    path.src + '/img/**',
+    '!' + path.src + '/img/sprite'
+  ])
     .pipe(gulp.dest(path.tmp + '/img/'));
+});
+
+// sprite
+gulp.task('sprite', function () {
+  var spriteData = gulp.src(path.src + '/img/sprite/*.png').pipe(spritesmith({
+    imgName: 'sprite.png',
+    cssName: '_sprite.scss',
+    imgPath: '../img/sprite.png'
+  }));
+  spriteData.img.pipe(gulp.dest(path.tmp + '/img/'));
+  spriteData.css.pipe(gulp.dest(path.src + '/scss/var/'));
 });
 
 // clean
@@ -88,8 +105,10 @@ gulp.task('build-clean', function() {
 
 // build-js
 gulp.task('build-js', ['js'], function() {
-  return gulp.src([path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/**/*.js'])
-    .pipe(uglify())
+  return gulp.src([
+    path.tmp + '/js/**/*.js',
+    '!' + path.tmp + '/js/lib/**/*.js'
+  ]).pipe(uglify())
     .pipe(gulp.dest(path.build + '/js/'));
 });
 
@@ -126,7 +145,8 @@ gulp.task("server", function() {
 // default
 gulp.task('default', ['clean'], function() {
   runSequence(
-    ['html', 'js', 'sass', 'img'],
+    'img',
+    ['html', 'js', 'sass'],
     'watch'
   );
 });
