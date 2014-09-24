@@ -6,17 +6,10 @@ var path = {
 };
 
 var gulp = require('gulp');
-var concat = require('gulp-concat');
+var $ = require('gulp-load-plugins')();
 var del = require('del');
-var uglify = require('gulp-uglify');
-var sass = require('gulp-sass');
-var minify = require('gulp-minify-css');
-var plumber = require('gulp-plumber');
-var autoprefixer = require('gulp-autoprefixer');
 var browser = require('browser-sync');
 var runSequence = require('run-sequence');
-var clean = require('gulp-clean');
-var imagemin = require('gulp-imagemin');
 
 // html
 gulp.task('html', function() {
@@ -28,7 +21,7 @@ gulp.task('html', function() {
 // js
 gulp.task('js', ['js-prepare'], function(){
   return gulp.src(path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/***/*.js')
-    .pipe(plumber())
+    .pipe($.plumber())
     .pipe(browser.reload({stream:true}));
 });
 
@@ -40,7 +33,7 @@ gulp.task('js-prepare', function() {
 // js-concat
 gulp.task('js-concat', function(){
   return gulp.src(path.src + '/js/common/*js')
-    .pipe(concat('common.js'))
+    .pipe($.concat('common.js'))
     .pipe(gulp.dest(path.tmp + '/js/'));
 });
 
@@ -58,9 +51,9 @@ gulp.task('js-del', function(cb) {
 // sass
 gulp.task('sass', function(){
   gulp.src(path.src + '/scss/**/*.scss')
-    .pipe(plumber())
-    .pipe(sass())
-    .pipe(autoprefixer({
+    .pipe($.plumber())
+    .pipe($.sass())
+    .pipe($.autoprefixer({
       browsers: ['last 2 versions'],
       cascade: true
     }))
@@ -77,33 +70,33 @@ gulp.task('img', function() {
 // clean
 gulp.task('clean', function() {
   return gulp.src(path.tmp)
-    .pipe(clean());
+    .pipe($.clean());
 });
 
 // build-clean
 gulp.task('build-clean', function() {
   return gulp.src(path.build)
-    .pipe(clean());
+    .pipe($.clean());
 });
 
 // build-js
 gulp.task('build-js', ['js'], function() {
   return gulp.src([path.tmp + '/js/**/*.js', !path.tmp + '/js/lib/**/*.js'])
-    .pipe(uglify())
+    .pipe($.uglify())
     .pipe(gulp.dest(path.build + '/js/'));
 });
 
 // build-css
 gulp.task('build-css', ['sass'], function() {
   gulp.src(path.tmp + '/css/**/*.css')
-    .pipe(minify())
+    .pipe($.minifyCss())
     .pipe(gulp.dest(path.build + '/css/'));
 });
 
 // build-img
 gulp.task('build-img', ['img'], function() {
   gulp.src(path.tmp + '/img/**')
-    .pipe(imagemin())
+    .pipe($.imagemin())
     .pipe(gulp.dest(path.build + '/img/'));
 });
 
