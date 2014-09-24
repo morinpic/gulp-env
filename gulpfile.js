@@ -7,6 +7,7 @@ var paths = {
 
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
+var spritesmith = require('gulp.spritesmith');
 var del = require('del');
 var browserSync = require('browser-sync');
 var runSequence = require('run-sequence');
@@ -29,7 +30,7 @@ gulp.task('js', ['js-prepare'], function(){
   return gulp.src([
     paths.tmp + '/js/**/*.js',
     '!' + paths.tmp + '/js/lib/***/*.js'
-    ]).pipe($.plumber())
+  ]).pipe($.plumber())
     .pipe(reload({stream:true}));
 });
 
@@ -70,9 +71,22 @@ gulp.task('sass', function(){
 });
 
 // img
-gulp.task('img', function() {
-  gulp.src(paths.src + '/img/**')
-    .pipe(gulp.dest(paths.tmp + '/img/'));
+gulp.task('img', ['sprite'], function() {
+  gulp.src([
+    paths.src + '/img/**',
+    '!' + paths.src + '/img/sprite'
+  ]).pipe(gulp.dest(paths.tmp + '/img/'));
+});
+
+// sprite
+gulp.task('sprite', function () {
+  var spriteData = gulp.src(paths.src + '/img/sprite/*.png').pipe(spritesmith({
+    imgName: 'sprite.png',
+    cssName: '_sprite.scss',
+    imgPath: '../img/sprite.png'
+  }));
+  spriteData.img.pipe(gulp.dest(paths.tmp + '/img/'));
+  spriteData.css.pipe(gulp.dest(paths.src + '/scss/var/'));
 });
 
 // build-clean
@@ -128,7 +142,8 @@ gulp.task("server", function() {
 // default
 gulp.task('default', ['clean'], function() {
   runSequence(
-    ['html', 'js', 'sass', 'img'],
+    'img',
+    ['html', 'js', 'sass'],
     'watch'
   );
 });
