@@ -1,10 +1,3 @@
-// basic paths setting
-var paths = {
-  src : 'assets',
-  tmp : '.tmp',
-  build : 'build'
-};
-
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')();
 var spritesmith = require('gulp.spritesmith');
@@ -13,6 +6,13 @@ var browserSync = require('browser-sync');
 var runSequence = require('run-sequence');
 var reload = browserSync.reload;
 
+// basic paths setting
+var paths = {
+  src : 'assets',
+  tmp : '.tmp',
+  build : 'build'
+};
+
 // clean
 gulp.task('clean', function (cb) {
   del(paths.tmp, cb);
@@ -20,7 +20,8 @@ gulp.task('clean', function (cb) {
 
 // html
 gulp.task('html', function() {
-  gulp.src(paths.src + '/**/*.html')
+  return gulp.src(paths.src + '/templates/*.ect')
+    .pipe($.ect())
     .pipe(gulp.dest(paths.tmp))
     .pipe(reload({stream:true}));
 });
@@ -125,7 +126,7 @@ gulp.task('build-img', ['img'], function() {
 
 // watch
 gulp.task('watch', ['server'], function(){
-  gulp.watch([paths.src +'/**/*.html'], ['html']);
+  gulp.watch([paths.src +'/**/*.ect'], ['html']);
   gulp.watch([paths.src +'/js/**/*.js'], ['js']);
   gulp.watch([paths.src +'/scss/**/*.scss'], ['sass']);
 });
