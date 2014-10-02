@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title></title>
+  <title><% content 'title' %>| gulp-env page</title>
   <meta name="description" content="">
   <meta name="keywords" content=""/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
@@ -10,11 +10,7 @@
 </head>
 <body>
   <div class="ly-container">
-    <h1>Gulp入門</h1>
-    <img src="img/sample.png" width="45" alt="">
-    <i class="icon icon-facebook"></i>
-    <i class="icon icon-twitter"></i>
-    <i class="icon icon-insta"></i>
+    <% content %>
   </div>
   <!--[if lt IE 9]>
     <script src="js/html5shiv.min.js"></script>
