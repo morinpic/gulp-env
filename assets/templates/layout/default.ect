@@ -6,7 +6,9 @@
   <meta name="description" content="">
   <meta name="keywords" content=""/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+  <!-- build:css css/app.css -->
   <link rel="stylesheet" href="css/common.css">
+  <!-- endbuild -->
 </head>
 <body>
   <div class="ly-container">
@@ -15,6 +17,14 @@
   <!--[if lt IE 9]>
     <script src="js/html5shiv.min.js"></script>
   <![endif]-->
-  <script src="js/common.js" type="text/javascript"></script>
+
+  <!-- build:js js/vendor.js -->
+  <script src="js/lib/jquery-1.11.1.min.js"></script>
+  <!-- endbuild -->
+
+  <!-- build:js js/app.js -->
+  <script src="js/common/foo.js"></script>
+  <script src="js/common/bar.js"></script>
+  <!-- endbuild -->
 </body>
 </html>
