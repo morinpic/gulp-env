@@ -5,5 +5,9 @@
   "authors": [
     "morinpic <morinpic0518@gmail.com>"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "1",
+    "html5shiv": "~3.7.2"
+  }
 }
