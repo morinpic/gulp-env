@@ -21,7 +21,10 @@ gulp.task('clean', function (cb) {
 // ect
 gulp.task('ect', function() {
   return gulp.src(paths.src + '/templates/*.ect')
-    .pipe($.ect())
+    .pipe($.ect({data: function (filename, cb) {
+      console.log(filename);
+      cb({foo: require('./assets/data/bar.json')});
+    }}))
     .pipe(gulp.dest(paths.tmp))
     .pipe(reload({stream:true}));
 });
