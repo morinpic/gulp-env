@@ -5,3 +5,11 @@
 <i class="icon icon-facebook"></i>
 <i class="icon icon-twitter"></i>
 <i class="icon icon-insta"></i>
+
+<% if @foo.sample?.length : %>
+  <ul>
+    <% for sample in @foo.sample : %>
+      <li><%= sample.name %></li>
+    <% end %>
+  </ul>
+<% end %>
