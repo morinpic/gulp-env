@@ -1,0 +1,13 @@
+{
+  "name": "gulp-env",
+  "version": "0.0.0",
+  "homepage": "https://github.com/morinpic/gulp-env",
+  "authors": [
+    "morinpic <morinpic0518@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "1",
+    "html5shiv": "~3.7.2"
+  }
+}
